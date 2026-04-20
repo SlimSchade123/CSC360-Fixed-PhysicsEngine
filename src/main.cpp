@@ -14,6 +14,7 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "VectorScene.h"
 #include "SpringScene.h"
 #include "PolarScene.h"
+#include "SceneFactory.h"
 
 int main ()
 {
@@ -29,7 +30,9 @@ int main ()
 	// Load a texture from the resources directory
 	Texture wabbit = LoadTexture("wabbit_alpha.png");
 	
-	Scene* scene = new SpringScene("Vector", 1280, 720);
+	SceneFactory* factory = new SceneFactory();
+
+	Scene* scene = factory->CreateScene("Spring", 1280, 720);
 
 	scene->Initialize();
 
