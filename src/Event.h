@@ -1,37 +1,29 @@
 #pragma once
 #include <vector>
+#include <functional>
 
 class Event
 {
 public:
 	//Defining a function pointer
-	typedef void (*event_call)(void);
 
 
-	void AddEvent(event_call event)
+	void AddEvent(std::function<void()> event)
 	{
 		Events.push_back(event);
 	}
 
-	void RemoveEvent(event_call event)
+	void EvokeEvent(std::function<void()> event)
 	{
-		for (size_t i = 0; i < Events.size(); i++)
+		for (auto& event : Events)
 		{
-			if (Events[i] == event)
+			if (event.target_type() == event.target_type())
 			{
-				Events.erase(Events.begin() + i);
-				return;
+				event();
+				break;
 			}
 		}
 	}
-
-	void EvokeEvents()
-	{
-		for (size_t i = 0; i < Events.size(); i++)
-		{
-			Events[i]();
-		}
-	}
 private:
-	std::vector<event_call> Events;
+	std::vector<std::function<void()>> Events;
 };

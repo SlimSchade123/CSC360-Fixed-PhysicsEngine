@@ -5,6 +5,7 @@
 #include "raygui.h"
 #include "World.h"
 #include "gui.h"
+#include "Event.h"
 #include <iostream>
 
 
@@ -15,7 +16,29 @@ void SpringScene::Initialize()
 
 	m_world = new World();
 	m_world->Initialize(Vector2{ 0, -9.81f }, 30);
+
+	m_event = new Event();
+	m_event->AddEvent(std::function<void()>([this]() { PlaceBody(); }));
 	
+}
+
+void SpringScene::PlaceBody()
+{
+	float theta = randomf(0, 360);
+
+	Vector2 position = m_camera->ScreenToWorld(GetMousePosition());
+	Body::Type type = (Body::Type)(GUI::bodyTypeActive);
+	Body* body = m_world->CreateBody(type, position, GUI::massValue, GUI::sizeValue, ColorFromHSV(randomf(360), 1, 1));
+
+	float offset = randomf(-1, 1);
+
+	float x = cos(theta);
+	float y = sin(theta);
+
+	body->damping = GUI::dampingValue;
+	body->gravityScale = GUI::gravityScaleValue;
+
+	body->restitution = GUI::restitutionValue;
 }
 
 void SpringScene::Update()
@@ -35,20 +58,7 @@ void SpringScene::Update()
 		//Place a body
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 		{
-
-			Vector2 position = m_camera->ScreenToWorld(GetMousePosition());
-			Body::Type type = (Body::Type)(GUI::bodyTypeActive);
-			Body* body = m_world->CreateBody(type, position, GUI::massValue, GUI::sizeValue, ColorFromHSV(randomf(360), 1, 1));
-
-			float offset = randomf(-1, 1);
-
-			float x = cos(theta);
-			float y = sin(theta);
-
-			body->damping = GUI::dampingValue;
-			body->gravityScale = GUI::gravityScaleValue;
-
-			body->restitution = GUI::restitutionValue;
+			m_event->EvokeEvent(std::function<void()>([this]() { PlaceBody(); }));
 		}
 
 		if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
