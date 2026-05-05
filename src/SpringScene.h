@@ -19,7 +19,7 @@ public:
 	void Draw() override;
 
 	void DrawGUI() override;
-
+	void PlaceBody();
 private:
 	Body* m_selected{ nullptr };
 	Body* m_connect{ nullptr };
