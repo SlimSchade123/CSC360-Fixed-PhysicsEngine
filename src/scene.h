@@ -45,4 +45,6 @@ protected:
 
 	SceneCamera* m_camera{ nullptr };
 	class World* m_world{ nullptr };
+
+	//class Event* m_onReset{ nullptr };
 };
